@@ -2,13 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<data>
+    <data>
 
         <import type="android.view.View" />
-
-        <variable
-            name="view"
-            type="pe.warrenth.mymvvmsample.todolist.TodoListFragment" />
 
         <variable
             name="viewmodel"
@@ -16,13 +12,11 @@
 
     </data>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onRefresh="@{viewmodel}"
-        app:refreshing="@{viewmodel.dataLoading}"
-        >
+        android:onRefresh="@{viewmodel}">
 
         <ListView
             android:id="@+id/tasks_list"
@@ -31,6 +25,6 @@
             android:layout_height="wrap_content"
             />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

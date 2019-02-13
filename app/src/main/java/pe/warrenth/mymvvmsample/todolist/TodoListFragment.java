@@ -2,19 +2,20 @@ package pe.warrenth.mymvvmsample.todolist;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import pe.warrenth.mymvvmsample.R;
 import pe.warrenth.mymvvmsample.data.Task;
 import pe.warrenth.mymvvmsample.data.TodoRepository;
@@ -31,29 +32,26 @@ public class TodoListFragment extends Fragment {
 
     private MainListAdapter mListAdapter;
 
+    public TodoListFragment() {
+
+    }
+
     public static TodoListFragment newInstance() {
-        
-        Bundle args = new Bundle();
-        
-        TodoListFragment fragment = new TodoListFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new TodoListFragment();
     }
 
-    public void setViewModel(TodoListViewModel viewModel) {
-        mViewModel = viewModel;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         //자동으로 Binding 클래스 생성.  (xml 이름 + Binding)
-
         mFragmentTodoBinding = FragmentTodoListBinding.inflate(inflater, container, false);
 
         //xml에 정의된 view, viewmodel 에 주입. 자동생성된 함수.
-        mFragmentTodoBinding.setView(this);
+        //mFragmentTodoBinding.setView(this);
+        mViewModel = MainActivity.obtainViewModel(getActivity());
+
         mFragmentTodoBinding.setViewmodel(mViewModel);
+        mFragmentTodoBinding.setLifecycleOwner(getActivity());
 
         return mFragmentTodoBinding.getRoot();
     }

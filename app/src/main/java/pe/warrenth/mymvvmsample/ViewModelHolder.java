@@ -3,7 +3,8 @@ package pe.warrenth.mymvvmsample;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 
 public class ViewModelHolder<VM> extends Fragment {
     private VM mViewModel;
