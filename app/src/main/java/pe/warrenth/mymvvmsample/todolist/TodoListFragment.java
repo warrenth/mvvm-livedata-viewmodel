@@ -1,6 +1,5 @@
 package pe.warrenth.mymvvmsample.todolist;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import pe.warrenth.mymvvmsample.R;
 import pe.warrenth.mymvvmsample.data.Task;
@@ -46,13 +46,15 @@ public class TodoListFragment extends Fragment {
         //자동으로 Binding 클래스 생성.  (xml 이름 + Binding)
         mFragmentTodoBinding = FragmentTodoListBinding.inflate(inflater, container, false);
 
-        //xml에 정의된 view, viewmodel 에 주입. 자동생성된 함수.
-        //mFragmentTodoBinding.setView(this);
+        // Activity에서 이미 생성된 ViewModel의 인스턴스를 받는다.
         mViewModel = MainActivity.obtainViewModel(getActivity());
 
+        // Binding된 XML 에 ViewModel을 주입 시킨다.
         mFragmentTodoBinding.setViewmodel(mViewModel);
+        // Binding된 XML 에 LifeCycleOnwer Interface가 구현된 객체를 넣는다.
         mFragmentTodoBinding.setLifecycleOwner(getActivity());
 
+        // Binding된 XML 의 root 를 리턴.
         return mFragmentTodoBinding.getRoot();
     }
 

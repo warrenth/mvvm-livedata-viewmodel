@@ -1,6 +1,6 @@
 package pe.warrenth.mymvvmsample;
 
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.widget.ListView;
 
 import java.util.List;

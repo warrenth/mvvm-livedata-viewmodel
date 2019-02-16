@@ -1,9 +1,9 @@
 package pe.warrenth.mymvvmsample.todoedit;
 
 import android.content.Context;
-import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
-import android.support.annotation.Nullable;
+import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableField;
+import androidx.annotation.Nullable;
 
 import pe.warrenth.mymvvmsample.data.Task;
 import pe.warrenth.mymvvmsample.data.TodoDataSource;

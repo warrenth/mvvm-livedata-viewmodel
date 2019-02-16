@@ -1,8 +1,8 @@
 package pe.warrenth.mymvvmsample.tododetail;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.ObservableField;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.ObservableField;
 
 import pe.warrenth.mymvvmsample.TodoBaseViewModel;
 import pe.warrenth.mymvvmsample.data.TodoRepository;

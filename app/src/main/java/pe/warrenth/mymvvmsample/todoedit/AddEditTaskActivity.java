@@ -1,8 +1,8 @@
 package pe.warrenth.mymvvmsample.todoedit;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import pe.warrenth.mymvvmsample.ActivityUtils;
 import pe.warrenth.mymvvmsample.AppExecutors;

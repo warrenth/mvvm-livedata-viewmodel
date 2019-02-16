@@ -42,5 +42,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         return mTodoRepository;
     }
 
-
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        return (T) new TodoListViewModel(mTodoRepository, mApplication);
+    }
 }

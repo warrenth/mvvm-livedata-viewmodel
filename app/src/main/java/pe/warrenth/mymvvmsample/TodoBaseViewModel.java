@@ -1,11 +1,11 @@
 package pe.warrenth.mymvvmsample;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.databinding.Observable;
-import android.databinding.ObservableField;
-import android.support.annotation.Nullable;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableField;
+import androidx.annotation.Nullable;
 
 import pe.warrenth.mymvvmsample.data.Task;
 import pe.warrenth.mymvvmsample.data.TodoDataSource;
