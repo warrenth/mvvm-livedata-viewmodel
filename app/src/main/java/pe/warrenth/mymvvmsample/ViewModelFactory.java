@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import pe.warrenth.mymvvmsample.data.TodoRepository;
 import pe.warrenth.mymvvmsample.data.local.TodoDatabase;
 import pe.warrenth.mymvvmsample.data.local.TodoLocalDataSource;
+import pe.warrenth.mymvvmsample.tododetail.TodoDetailViewModel;
 import pe.warrenth.mymvvmsample.todoedit.AddEditTaskViewModel;
 import pe.warrenth.mymvvmsample.todolist.TodoListViewModel;
 
@@ -45,6 +46,16 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new TodoListViewModel(mTodoRepository, mApplication);
+        if (modelClass.isAssignableFrom(TodoDetailViewModel.class)) {
+            //noinspection unchecked
+            return (T) new TodoDetailViewModel(mApplication, mTodoRepository);
+        } else if (modelClass.isAssignableFrom(TodoListViewModel.class)) {
+            //noinspection unchecked
+            return (T) new TodoListViewModel(mApplication, mTodoRepository);
+        } else if (modelClass.isAssignableFrom(AddEditTaskViewModel.class)) {
+            //noinspection unchecked
+            return (T) new AddEditTaskViewModel(mApplication, mTodoRepository);
+        }
+        throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 }

@@ -1,41 +1,38 @@
 package pe.warrenth.mymvvmsample.todoedit;
 
+import android.app.Application;
 import android.content.Context;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.annotation.Nullable;
 
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
+import pe.warrenth.mymvvmsample.Event;
 import pe.warrenth.mymvvmsample.data.Task;
 import pe.warrenth.mymvvmsample.data.TodoDataSource;
 import pe.warrenth.mymvvmsample.data.TodoRepository;
 
-public class AddEditTaskViewModel implements TodoDataSource.GetTaskCallback {
+public class AddEditTaskViewModel extends AndroidViewModel implements TodoDataSource.GetTaskCallback {
 
-    public final ObservableField<String> title = new ObservableField<>();
+    // Two-way databinding, exposing MutableLiveData
+    public final MutableLiveData<String> title = new MutableLiveData<>();
 
-    public final ObservableField<String> description = new ObservableField<>();
+    // Two-way databinding, exposing MutableLiveData
+    public final MutableLiveData<String> description = new MutableLiveData<>();
 
-    public final ObservableBoolean dataLoading = new ObservableBoolean(false);
+    private final MutableLiveData<Boolean> dataLoading = new MutableLiveData<>();
 
-    private AddEditTaskNavigator mNavigator;
-    private final Context mContext;  // To avoid leaks, this must be an Application Context.
+    private final MutableLiveData<Event<Object>> mTaskUpdated = new MutableLiveData<>();
+
     private final TodoRepository mTodoRepository;
     @Nullable
     private String mTaskId;
     private boolean mIsNewTask;
 
-    public AddEditTaskViewModel(Context context, TodoRepository todoRepository) {
-        mContext = context.getApplicationContext();
+    public AddEditTaskViewModel(Application application, TodoRepository todoRepository) {
+        super(application);
         mTodoRepository = todoRepository;
-    }
-
-    public void onActivityCreated(AddEditTaskNavigator navigator) {
-        mNavigator = navigator;
-    }
-
-    public void onActivityDestroyed() {
-        // Clear references to avoid potential memory leaks.
-        mNavigator = null;
     }
 
     public void start(String taskId) {
@@ -47,7 +44,7 @@ public class AddEditTaskViewModel implements TodoDataSource.GetTaskCallback {
             return;
         }
         mIsNewTask = false;
-        dataLoading.set(true);
+        dataLoading.setValue(true);
         //mTodoRepository.getTask(taskId, this);
     }
 
@@ -64,7 +61,7 @@ public class AddEditTaskViewModel implements TodoDataSource.GetTaskCallback {
 
     public void saveTask() {
         if(mIsNewTask) {
-            createTask(title.get(), description.get());
+            createTask(title.getValue(), description.getValue());
         } else  {
             //update task
         }
@@ -76,10 +73,15 @@ public class AddEditTaskViewModel implements TodoDataSource.GetTaskCallback {
             //empty task message
         } else  {
             mTodoRepository.saveTask(newTask);
-
-            if(mNavigator != null) {
-                mNavigator.onTaskSaved();
-            }
+            mTaskUpdated.setValue(new Event<>(new Object()));
         }
+    }
+
+    public MutableLiveData<Event<Object>> getTaskUpdated() {
+        return mTaskUpdated;
+    }
+
+    public MutableLiveData<Boolean> getDataLoading() {
+        return dataLoading;
     }
 }

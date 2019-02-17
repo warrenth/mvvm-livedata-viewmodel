@@ -2,13 +2,6 @@ package pe.warrenth.mymvvmsample.todolist;
 
 import android.app.Application;
 import android.content.Context;
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableList;
-
-
 import java.util.List;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -25,33 +18,30 @@ public class TodoListViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> mDataLoading = new MutableLiveData<>();
 
-    private Context mContext; // To avoid leaks, this must be an Application Context.
-
-    private final TodoRepository mTodoRepository;
-
-    // MainAcitivity 에서 callback 받기 위한 listener.
-    private TodoListNavigator mNavigator;
-
     private final MutableLiveData<Event<String>> mOpenTaskEvent = new MutableLiveData<>();
 
-    public LiveData<Event<String>> getOpenTaskEvent() {
-        return mOpenTaskEvent;
-    }
+    private final MutableLiveData<Event<Object>> mNewTodoEvent = new MutableLiveData<>();
 
-    public TodoListViewModel(TodoRepository repository, Application application) {
+    private final TodoRepository mTodoRepository;
+    private Context mContext; // To avoid leaks, this must be an Application Context.
+
+    public TodoListViewModel(Application application, TodoRepository repository) {
         super(application);
         mContext = application.getApplicationContext(); // Force use of Application Context.
         mTodoRepository = repository;
     }
 
-    void setNavigator(TodoListNavigator navigator) {
-        mNavigator = navigator;
+    public LiveData<Event<String>> getOpenTaskEvent() {
+        return mOpenTaskEvent;
+    }
+
+    public LiveData<Event<Object>> getNewTodoEvent() {
+        return mNewTodoEvent;
     }
 
     public void start() {
         loadData();
     }
-
 
     private void loadData() {
         mDataLoading.setValue(true);
@@ -72,23 +62,14 @@ public class TodoListViewModel extends AndroidViewModel {
 
 
     public void addTodo() {
-        if(mNavigator != null) {
-            mNavigator.addNewTodo();
-        }
-    }
-
-    public void onActivityDestroyed() {
-        // Clear references to avoid potential memory leaks.
-        mNavigator = null;
-    }
-
-
-    public LiveData<Boolean> isDataLoading() {
-        return mDataLoading;
+        mNewTodoEvent.setValue(new Event<>(new Object()));
     }
 
     public LiveData<List<Task>> getItems() {
         return mItems;
     }
 
+    public void openTask(String taskId) {
+        mOpenTaskEvent.setValue(new Event<>(taskId));
+    }
 }

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import pe.warrenth.mymvvmsample.R;
 import pe.warrenth.mymvvmsample.data.Task;
 import pe.warrenth.mymvvmsample.data.TodoRepository;
@@ -87,31 +88,21 @@ public class TodoListFragment extends Fragment {
 
         mListAdapter = new MainListAdapter(
                 new ArrayList<Task>(0),
-                TodoRepository.getInstance(TodoRemoteDataSource.getInstance()),
                 mViewModel,
-                (TodoListItemNavigator) getActivity());
+                getActivity());
         listView.setAdapter(mListAdapter);
-    }
-
-    @Override
-    public void onDestroy() {
-        mListAdapter.onDestory();
-        super.onDestroy();
     }
 
     public static class MainListAdapter extends BaseAdapter {
 
         private final TodoListViewModel mMainViewModel;
         private List<Task> mTasks;
-        private TodoRepository mTasksRepository;
-        private TodoListItemNavigator mTodoListItemNavigator;
+        private LifecycleOwner mLifeCycleOwner;
 
-        public MainListAdapter(ArrayList<Task> tasks, TodoRepository repository,
-                               TodoListViewModel viewModel, TodoListItemNavigator todoListItemNavigator) {
+        public MainListAdapter(ArrayList<Task> tasks, TodoListViewModel viewModel, LifecycleOwner activity) {
             mTasks = tasks;
-            mTasksRepository = repository;
             mMainViewModel = viewModel;
-            mTodoListItemNavigator = todoListItemNavigator;
+            mLifeCycleOwner = activity;
         }
 
         @Override
@@ -141,23 +132,16 @@ public class TodoListFragment extends Fragment {
                 binding = DataBindingUtil.getBinding(view);
             }
 
-            final TodoListItemViewModel viewModel = new TodoListItemViewModel(
-                    mTasksRepository,
-                    viewGroup.getContext().getApplicationContext()
-            );
-
-            viewModel.setNavigator(mTodoListItemNavigator);
-
-            binding.setViewmodel(viewModel);
-
-            viewModel.setTask(task);
-
+            binding.setTask(task);
+            binding.setLifecycleOwner(mLifeCycleOwner);
+            binding.setListener(new TodoItemUserActionListener(){
+                @Override
+                public void onTaskClicked(Task task) {
+                    mMainViewModel.openTask(task.getId());
+                }
+            });
+            binding.executePendingBindings();
             return binding.getRoot();
-        }
-
-        public void onDestory() {
-            //interface를 null 한다.
-            mTodoListItemNavigator = null;
         }
 
         public void replaceData(List<Task> items) {

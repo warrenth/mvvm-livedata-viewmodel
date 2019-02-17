@@ -4,13 +4,13 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import pe.warrenth.mymvvmsample.ActivityUtils;
-import pe.warrenth.mymvvmsample.AppExecutors;
+import pe.warrenth.mymvvmsample.Event;
 import pe.warrenth.mymvvmsample.R;
-import pe.warrenth.mymvvmsample.ViewModelHolder;
-import pe.warrenth.mymvvmsample.data.TodoRepository;
-import pe.warrenth.mymvvmsample.data.local.TodoDatabase;
-import pe.warrenth.mymvvmsample.data.local.TodoLocalDataSource;
+import pe.warrenth.mymvvmsample.ViewModelFactory;
 
 public class AddEditTaskActivity extends AppCompatActivity implements AddEditTaskNavigator{
 
@@ -27,42 +27,26 @@ public class AddEditTaskActivity extends AppCompatActivity implements AddEditTas
 
         setContentView(R.layout.activity_edit);
 
-        AddEditTaskFragment addEditTaskFragment = findOrCreateViewFragment();
+        findOrCreateViewFragment();
 
-        mViewModel = findOrCreateViewModel();
-
-        addEditTaskFragment.setViewModel(mViewModel);
-
-        mViewModel.onActivityCreated(this);
+        mViewModel = ontainViewModel(this);
+        mViewModel.getTaskUpdated().observe(this, new Observer<Event<Object>>() {
+            @Override
+            public void onChanged(Event<Object> taskIdEvent) {
+                if (taskIdEvent.getContentIfNotHandled() != null) {
+                    onTaskSaved();
+                }
+            }
+        });
     }
 
-    @Override
-    protected void onDestroy() {
-        mViewModel.onActivityDestroyed();
-        super.onDestroy();
-    }
+    public static AddEditTaskViewModel ontainViewModel(FragmentActivity activity) {
+        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
 
-    private AddEditTaskViewModel findOrCreateViewModel() {
+        AddEditTaskViewModel viewModel =
+                ViewModelProviders.of(activity, factory).get(AddEditTaskViewModel.class);
 
-        ViewModelHolder<AddEditTaskViewModel> retainedViewModel =
-                (ViewModelHolder<AddEditTaskViewModel>) getSupportFragmentManager()
-                        .findFragmentByTag(ADD_EDIT_VIEWMODEL_TAG);
-
-        if(retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
-            return retainedViewModel.getViewmodel();
-        } else  {
-            AddEditTaskViewModel viewModel = new AddEditTaskViewModel(
-                    getApplicationContext(),
-                    TodoRepository.getInstance(new TodoLocalDataSource(new AppExecutors(),
-                            TodoDatabase.getInstance(this).taskDao())));
-
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(),
-                    ViewModelHolder.createContainer(viewModel),
-                    ADD_EDIT_VIEWMODEL_TAG);
-
-            return viewModel;
-        }
+        return viewModel;
     }
 
     private AddEditTaskFragment findOrCreateViewFragment() {

@@ -35,7 +35,9 @@ public class AddEditTaskFragment extends Fragment {
         if(mFragmentTodoEditBinding == null) {
             mFragmentTodoEditBinding = FragmentTodoEditBinding.bind(root);
         }
+        mViewModel = AddEditTaskActivity.ontainViewModel(getActivity());
         mFragmentTodoEditBinding.setViewmodel(mViewModel);
+        mFragmentTodoEditBinding.setLifecycleOwner(getActivity());
 
         return mFragmentTodoEditBinding.getRoot();
     }

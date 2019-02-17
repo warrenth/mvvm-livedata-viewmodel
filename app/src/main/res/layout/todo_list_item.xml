@@ -6,23 +6,31 @@
 
 
     <data>
+
+        <import type="android.view.View.OnClickListener" />
+
         <variable
-            name="viewmodel"
-            type="pe.warrenth.mymvvmsample.todolist.TodoListItemViewModel"/>
+            name="task"
+            type="pe.warrenth.mymvvmsample.data.Task"/>
+
+
+        <variable
+            name="listener"
+            type="pe.warrenth.mymvvmsample.todolist.TodoItemUserActionListener"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="vertical"
-        android:onClick="@{() -> viewmodel.todoItemClicked()}">
+        android:onClick="@{() -> listener.onTaskClicked(task)}">
 
         <TextView
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="테스트 title "
-            android:text="@{viewmodel.titleForList}"
+            android:text="@{task.titleForList}"
             />
 
     </LinearLayout>

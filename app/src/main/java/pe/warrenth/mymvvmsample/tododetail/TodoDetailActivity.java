@@ -4,13 +4,17 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import pe.warrenth.mymvvmsample.ActivityUtils;
 import pe.warrenth.mymvvmsample.AppExecutors;
 import pe.warrenth.mymvvmsample.R;
+import pe.warrenth.mymvvmsample.ViewModelFactory;
 import pe.warrenth.mymvvmsample.ViewModelHolder;
 import pe.warrenth.mymvvmsample.data.TodoRepository;
 import pe.warrenth.mymvvmsample.data.local.TodoDatabase;
 import pe.warrenth.mymvvmsample.data.local.TodoLocalDataSource;
+import pe.warrenth.mymvvmsample.todoedit.AddEditTaskViewModel;
 
 public class TodoDetailActivity extends AppCompatActivity {
 
@@ -30,33 +34,18 @@ public class TodoDetailActivity extends AppCompatActivity {
 
         TodoDetailFragment todoDetailFragment = findOrCreateViewFragment();
 
-        mTodoDetailViewModel = findOrCreateViewModel();
+        mTodoDetailViewModel = obtainViewModel(this);
 
         todoDetailFragment.setViewModel(mTodoDetailViewModel);
     }
 
-    private TodoDetailViewModel findOrCreateViewModel() {
-        ViewModelHolder<TodoDetailViewModel> retainedViewModel =
-                (ViewModelHolder<TodoDetailViewModel>) getSupportFragmentManager()
-                        .findFragmentByTag(TASKDETAIL_VIEWMODEL_TAG);
+    public static TodoDetailViewModel obtainViewModel(FragmentActivity activity) {
+        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
 
-        if (retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
-            // If the model was retained, return it.
-            return retainedViewModel.getViewmodel();
-        } else {
-            // There is no ViewModel yet, create it.
-            TodoDetailViewModel viewModel = new TodoDetailViewModel(
-                    getApplicationContext(),
-                    TodoRepository.getInstance(new TodoLocalDataSource(new AppExecutors(),
-                            TodoDatabase.getInstance(this).taskDao())));
+        TodoDetailViewModel viewModel =
+                ViewModelProviders.of(activity, factory).get(TodoDetailViewModel.class);
 
-            // and bind it to this Activity's lifecycle using the Fragment Manager.
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(),
-                    ViewModelHolder.createContainer(viewModel),
-                    TASKDETAIL_VIEWMODEL_TAG);
-            return viewModel;
-        }
+        return viewModel;
     }
 
     private TodoDetailFragment findOrCreateViewFragment() {

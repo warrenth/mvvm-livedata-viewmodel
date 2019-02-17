@@ -40,6 +40,14 @@ public class MainActivity extends AppCompatActivity implements TodoListNavigator
                 }
             }
         });
+        mViewModel.getNewTodoEvent().observe(this, new Observer<Event<Object>>() {
+            @Override
+            public void onChanged(Event<Object> objectEvent) {
+                if(objectEvent.getContentIfNotHandled() != null) {
+                    addNewTodo();
+                }
+            }
+        });
     }
 
 
@@ -62,12 +70,6 @@ public class MainActivity extends AppCompatActivity implements TodoListNavigator
             tasksFragment = TodoListFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tasksFragment, R.id.contentFrame);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        mViewModel.onActivityDestroyed();
-        super.onDestroy();
     }
 
     @Override

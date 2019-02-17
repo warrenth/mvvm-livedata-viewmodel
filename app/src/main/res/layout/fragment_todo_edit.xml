@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:hint="title"
                     android:maxLines="1"
-                    android:text="@={viewmodel.title}"
+                    android:text="@{viewmodel.title}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <EditText
@@ -42,7 +42,7 @@
                     android:layout_height="350dp"
                     android:gravity="top"
                     android:hint="Enter your todo"
-                    android:text="@={viewmodel.description}" />
+                    android:text="@{viewmodel.description}" />
 
             </LinearLayout>
 

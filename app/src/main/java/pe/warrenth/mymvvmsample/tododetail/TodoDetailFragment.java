@@ -38,7 +38,10 @@ public class TodoDetailFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_todo_detail, container, false);
 
         FragmentTodoDetailBinding todoDetailBinding = FragmentTodoDetailBinding.bind(view);
+
+        mViewModel = TodoDetailActivity.obtainViewModel(getActivity());
         todoDetailBinding.setViewmodel(mViewModel);
+        todoDetailBinding.setLifecycleOwner(getActivity());
 
         return todoDetailBinding.getRoot();
     }
